@@ -1,1 +1,2 @@
-# Spotify-Lyrics
+Basic program that finds the current song playing on my Spotify account and then uses web scraping to display the lyrics.
+Requires the Spotipy python module, which can be found here: https://github.com/plamere/spotipy. Public and private SPOTIPY_CLIENT_ID's can be created at https://developer.spotify.com/. In order to verify your client credentials, you need to run a program (I used a basic socket server) at the Spotipy redirect URI. in this case, http://localhost:8080/. 

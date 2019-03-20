@@ -54,8 +54,7 @@ headers_Get = {
 
 
 def get_Song_Lyrics(query):
-    print()
-    minestrone = ''
+    minestrone = '\n'
     s = requests.Session()
     query = '+'.join(query.split())
     url = 'https://www.google.com/search?q=' + query + '&ie=utf-8&oe=utf-8'

@@ -11,10 +11,9 @@ currentSong = ''
 PORT_NUMBER = 8080
 SPOTIPY_CLIENT_ID = '<YOUR ID>' # Your SPOTIPY_CLIENT_ID and SPOTIPY_CLIENT_SECRET can be created at https://developer.spotify.com/
 SPOTIPY_CLIENT_SECRET = '<YOUR SECRET KEY>'
-SPOTIPY_REDIRECT_URI = 'http://localhost:8080/'
+SPOTIPY_REDIRECT_URI = 'http://localhost:8080/callback/'
 SCOPE = 'user-library-read'
 CACHE = '.spotipyoauthcache'
-URL = 'http://localhost:8080/callback/'
 username = '<YOUR USERNAME>'
 scope = 'user-read-currently-playing'
 
@@ -23,7 +22,7 @@ def song_data():
     global query
     currentSongData = []
     remove = ['name', "'", '"', '\n', ',', ':', " '", ' Various Artists', 'Remastered Version']
-    token = util.prompt_for_user_token(username,scope,client_id=SPOTIPY_CLIENT_ID,client_secret=SPOTIPY_CLIENT_SECRET,redirect_uri=URL)
+    token = util.prompt_for_user_token(username,scope,client_id=SPOTIPY_CLIENT_ID,client_secret=SPOTIPY_CLIENT_SECRET,redirect_uri=SPOTIPY_REDIRECT_URI)
     sp = spotipy.Spotify(auth=token)
     playing = json.dumps(sp.current_user_playing_track(), sort_keys=True, indent=0)
     s = StringIO(str(playing))

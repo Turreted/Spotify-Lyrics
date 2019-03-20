@@ -36,7 +36,7 @@ def song_data():
             currentSongData.append(line)
     try:
         query = currentSongData[len(currentSongData) - 1] + ' lyrics'
-        display = currentSongData[len(currentSongData) - 1] + currentSongData[0]
+        display = currentSongData[len(currentSongData) - 1] ' by ' + currentSongData[0]
         return display
     except IndexError:
         return 'Device Disconnected'

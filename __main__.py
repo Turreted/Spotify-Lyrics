@@ -35,8 +35,8 @@ def song_data():
                 line = line[:line.find('-')]
             currentSongData.append(line)
     try:
-        query = currentSongData[len(currentSongData) - 1] + ' lyrics'
-        display = currentSongData[len(currentSongData) - 1] ' by ' + currentSongData[0]
+        query = currentSongData[len(currentSongData) - 1] + '+lyrics'
+        display = (currentSongData[len(currentSongData) - 1] + currentSongData[0])
         return display
     except IndexError:
         return 'Device Disconnected'
@@ -59,8 +59,7 @@ def get_Song_Lyrics(query):
     query = '+'.join(query.split())
     url = 'https://www.google.com/search?q=' + query + '&ie=utf-8&oe=utf-8'
     r = s.get(url, headers=headers_Get)
-    soup = BeautifulSoup(r.text, "html.parser")
-    soup = soup.find_all("span", {"jsname": "YS01Ge"})
+    soup = BeautifulSoup(r.text, "html.parser").find_all("span", {"jsname": "YS01Ge"})
     for link in soup:
         minestrone += (link.text + '\n')
     return minestrone
@@ -76,7 +75,7 @@ def main():
             print(song_data())
             print(get_Song_Lyrics(query))
             currentSong = song_data()
-        time.sleep(0.5)
+        time.sleep(0.01)
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 Basic program that finds the current song playing on your Spotify account and then uses web scraping to display the lyrics
 
 requirments:
-    -requests
+    -requests <br>
     -BS4
     -Spotify-token module (pip install spotify-token) 
     

@@ -4,13 +4,12 @@ from bs4 import BeautifulSoup
 import json
 from io import StringIO
 import time
+import flask
 
 query = ''
 currentSong = ''
-TOKEN = '' 
+TOKEN = ''
 # Get oauth token from https://developer.spotify.com/console/get-users-currently-playing-track/?market=
-
-# Credit to richstokes for streamlining song_data() and main()
 
 def song_data():
     global query
@@ -22,10 +21,14 @@ def song_data():
 
     response = requests.get('https://api.spotify.com/v1/me/player/currently-playing', headers=headers)
     json_data = json.loads(response.text)
-    ARTIST = json_data["item"]["artists"][0]["name"]
-    SONG = json_data["item"]["name"]
-    query = SONG + " " + ARTIST + " +lyrics"
-    return 'Artist: %s, Song: %s' % (ARTIST, SONG)
+    try:
+        ARTIST = json_data["item"]["artists"][0]["name"]
+        SONG = json_data["item"]["name"]
+        query = SONG + " " + ARTIST + " +lyrics"
+        return 'Artist: %s, Song: %s' % (ARTIST, SONG)
+    except KeyError:
+        return currentSong
+
 
 
 headers_Get = {
@@ -61,7 +64,7 @@ def main():
             print(song_data())
             print(get_Song_Lyrics(query))
             currentSong = song_data()
-        time.sleep(0.01)
+        time.sleep(0.5)
 
 
 if __name__ == '__main__':

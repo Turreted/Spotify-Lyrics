@@ -56,7 +56,7 @@ class Spotify:
         soup = BeautifulSoup(r.text, "html.parser").find_all("span", {"jsname": "YS01Ge"})
         for link in soup:
             self.lyrics = f"{self.lyrics}\n{link.text}"
-        print(f"{self.song}\n")
+        print(f"{self.song}' '{self.artist}\n")
         print(f"{self.lyrics}\n")
 
 

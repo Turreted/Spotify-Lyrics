@@ -54,6 +54,7 @@ class Spotify:
                 self.getlyrics()
 
     def getlyrics(self):
+        self.lyrics = ''
         s = requests.Session()
         url = 'https://www.google.com/search?q={}&ie=utf-8&oe=utf-8'.format(self.query)
         r = s.get(url, headers=self.lyricheaders)

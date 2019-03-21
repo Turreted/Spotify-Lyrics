@@ -2,11 +2,10 @@ Basic program that finds the current song playing on your Spotify account and th
 
 requirments:
     <br></br>
-    <bold>-requests</bold> 
-    <br></br>
-    -BS4
-    <br></br>
-    -Spotify-token module (pip install spotify-token) 
-    <br></br>
-    
+        -requests
+        
+        -BS4
+
+         -Spotify-token module (pip install spotify-token) 
+
  Aside from that, it can be cloned and run as is. 

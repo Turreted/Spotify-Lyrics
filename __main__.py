@@ -7,14 +7,15 @@ import time
 import spotify_token as st
 import ast
 
-
-query = ''
-currentSong = ''
 USER = ''
 PW = ''
+query = ''
+currentSong = ''
 TOKEN = ''
 cache = open('Cached_Data.txt', 'r+')
+dirname, filename = os.path.split(os.path.abspath(__file__))
 
+os.chdir(dirname)
 if os.stat("Cached_Data.txt").st_size == 0:
     USER = input('Spotify Username: ')
     PW = input('Spotify Password: ')
@@ -64,6 +65,7 @@ headers_Get = {
         'Connection': 'keep-alive',
         'Upgrade-Insecure-Requests': '1'
     }
+
 
 def get_Song_Lyrics(query):
     minestrone = '\n'

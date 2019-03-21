@@ -3,15 +3,26 @@ import os
 import requests
 from bs4 import BeautifulSoup
 import json
-from io import StringIO
 import time
 import spotify_token as st
+import ast
+
 
 query = ''
 currentSong = ''
-USER = os.environ.get('SPOTIFY_USER')
-PW = os.environ.get('SPOTIFY_PW')
+USER = ''
+PW = ''
 TOKEN = ''
+cache = open('Cached_Data.txt', 'r+')
+
+if os.stat("Cached_Data.txt").st_size == 0:
+    USER = input('Spotify Username: ')
+    PW = input('Spotify Password: ')
+    cache.write("['{}', '{}']".format(USER, PW))
+else:
+    data = ast.literal_eval(str(cache.readline()))
+    USER = data[0]
+    PW = data[1]
 
 
 def get_token():
@@ -36,7 +47,7 @@ def song_data():
         SONG = json_data["item"]["name"]
     except:
         print('JSON Response Error.')  # TODO handle this better
-        get_token()  # Hacky, but fair to assume if API is not responding it could be due to an expired token 
+        get_token()  # Hacky, but fair to assume if API is not responding it could be due to an expired token
         # print(response.content)
         return currentSong
     finally:
@@ -53,7 +64,6 @@ headers_Get = {
         'Connection': 'keep-alive',
         'Upgrade-Insecure-Requests': '1'
     }
-
 
 def get_Song_Lyrics(query):
     minestrone = '\n'

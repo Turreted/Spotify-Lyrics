@@ -16,7 +16,8 @@ dirname, filename = os.path.split(os.path.abspath(__file__))
 os.chdir(dirname)
 
 try:
-    os.system("touch Cached_Data.txt")
+    with open("Cached_Data.txt","w") as file:
+        file.close()
 except:
     pass
 

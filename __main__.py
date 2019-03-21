@@ -64,7 +64,7 @@ def main():
             print(song_data())
             print(get_Song_Lyrics(query))
             currentSong = song_data()
-        time.sleep(0.5)
+        time.sleep(1)
 
 
 if __name__ == '__main__':

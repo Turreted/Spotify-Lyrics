@@ -6,3 +6,6 @@ pip install -r requirments.txt
 ```
 
  Aside from that, it can be cloned and run as is. 
+ 
+Credit to richstokes for streamlining the API interaction and JSON parsing
+Credit to TheCannings for properly formatting the code

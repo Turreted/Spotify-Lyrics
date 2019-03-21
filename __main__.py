@@ -5,7 +5,7 @@ import time
 
 query = ''
 currentSong = ''
-TOKEN = 'BQDHkHPPc9eOsSy9IClx-zf56_hSxoqCDr1xWNCYrBFfqn2v2NsLPICmQboz5SNg1UQy42ogYCBPY8rFaXYrHF-MTn9OldRCMRzQA-eWVkxCdDQN6n85ndIPJRuwAJ34UGne71Lrwb6fZKxH8boe9XIs9Tzyh8tEIlR1D3B3MI-itDGNU4xsMmlY7w'
+TOKEN = ''
 # Get oauth token from https://developer.spotify.com/console/get-users-currently-playing-track/?market=
 
 

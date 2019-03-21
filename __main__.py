@@ -59,14 +59,19 @@ class Spotify:
         print(f"{self.song}\n")
         print(f"{self.lyrics}\n")
 
-user = input("Please enter spotify username")
-passw = input("Please enter spotify password")
 
-spt = Spotify(user, passw)
-while True:
-    try:
-        spt.getsong()
-        time.sleep(3)
-    except KeyboardInterrupt:
-        quit() 
+def main():
+    user = input("Please enter spotify username")
+    passw = input("Please enter spotify password")
+    spt = Spotify(user, passw)
+    while True:
+        try:
+            spt.getsong()
+            time.sleep(3)
+        except KeyboardInterrupt:
+            quit() 
+    
+    
+if __name__ == "__main__":
+    main()
     

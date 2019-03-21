@@ -60,7 +60,7 @@ def song_data():
             query = SONG + " " + ARTIST + " +lyrics"
             return 'Artist: %s, Song: %s' % (ARTIST, SONG)
         except UnboundLocalError:
-            return 'JSON Response Error: try logging into Spotify and playing a song'
+            return 'JSON Response Error'
 
 
 headers_Get = {
@@ -94,9 +94,10 @@ def main():
     print(get_Song_Lyrics(query))
     while True:
         if song_data() != currentSong:
-            print(song_data())
-            print(get_Song_Lyrics(query))
-            currentSong = song_data()
+            if song_data() != 'JSON Response Error':
+                print(song_data())
+                print(get_Song_Lyrics(query))
+                currentSong = song_data()
         time.sleep(1)
 
 

@@ -61,8 +61,8 @@ class Spotify:
 
 
 def main():
-    user = input("Please enter spotify username")
-    passw = input("Please enter spotify password")
+    user = input("Please enter spotify username: ")
+    passw = input("Please enter spotify password: ")
     spt = Spotify(user, passw)
     while True:
         try:

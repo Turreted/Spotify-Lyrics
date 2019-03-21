@@ -12,10 +12,10 @@ PW = ''
 query = ''
 currentSong = ''
 TOKEN = ''
-cache = open('Cached_Data.txt', 'r+')
 dirname, filename = os.path.split(os.path.abspath(__file__))
-
 os.chdir(dirname)
+
+cache = open('Cached_Data.txt', 'r+')
 if os.stat("Cached_Data.txt").st_size == 0:
     USER = input('Spotify Username: ')
     PW = input('Spotify Password: ')
@@ -102,3 +102,4 @@ if __name__ == '__main__':
             quit()
         except SystemExit:
             quit()
+

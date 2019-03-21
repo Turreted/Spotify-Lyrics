@@ -53,13 +53,14 @@ def song_data():
         ARTIST = json_data["item"]["artists"][0]["name"]
         SONG = json_data["item"]["name"]
     except:
-        print('JSON Response Error.')  # TODO handle this better
         get_token()  # Hacky, but fair to assume if API is not responding it could be due to an expired token
-        # print(response.content)
-        return currentSong
+        return
     finally:
-        query = SONG + " " + ARTIST + " +lyrics"
-        return('Artist: %s, Song: %s' % (ARTIST, SONG))
+        try:
+            query = SONG + " " + ARTIST + " +lyrics"
+            return 'Artist: %s, Song: %s' % (ARTIST, SONG)
+        except UnboundLocalError:
+            return 'JSON Response Error: try logging into Spotify and playing a song'
 
 
 headers_Get = {
@@ -96,7 +97,7 @@ def main():
             print(song_data())
             print(get_Song_Lyrics(query))
             currentSong = song_data()
-        time.sleep(3)
+        time.sleep(1)
 
 
 if __name__ == '__main__':

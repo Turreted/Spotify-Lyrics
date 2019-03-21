@@ -1,15 +1,25 @@
 #!/usr/bin/env python3
+import os
 import requests
 from bs4 import BeautifulSoup
 import json
 from io import StringIO
 import time
-import flask
+import spotify_token as st
 
 query = ''
 currentSong = ''
+USER = os.environ.get('SPOTIFY_USER')
+PW = os.environ.get('SPOTIFY_PW')
 TOKEN = ''
-# Get oauth token from https://developer.spotify.com/console/get-users-currently-playing-track/?market=
+
+
+def get_token():
+    global TOKEN
+    data = st.start_session(USER,PW)
+    TOKEN = data[0]
+    expiration_date = data[1]
+
 
 def song_data():
     global query
@@ -19,16 +29,19 @@ def song_data():
     'Authorization': 'Bearer ' + TOKEN,
     }
 
-    response = requests.get('https://api.spotify.com/v1/me/player/currently-playing', headers=headers)
-    json_data = json.loads(response.text)
     try:
+        response = requests.get('https://api.spotify.com/v1/me/player/currently-playing', headers=headers)
+        json_data = json.loads(response.text)
         ARTIST = json_data["item"]["artists"][0]["name"]
         SONG = json_data["item"]["name"]
-        query = SONG + " " + ARTIST + " +lyrics"
-        return 'Artist: %s, Song: %s' % (ARTIST, SONG)
-    except KeyError:
+    except:
+        print('JSON Response Error.')  # TODO handle this better
+        get_token()  # Hacky, but fair to assume if API is not responding it could be due to an expired token 
+        # print(response.content)
         return currentSong
-
+    finally:
+        query = SONG + " " + ARTIST + " +lyrics"
+        return('Artist: %s, Song: %s' % (ARTIST, SONG))
 
 
 headers_Get = {
@@ -55,6 +68,7 @@ def get_Song_Lyrics(query):
 
 
 def main():
+    get_token()
     global query
     print(song_data())
     currentSong = song_data()

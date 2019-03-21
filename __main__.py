@@ -1,14 +1,16 @@
+#!/usr/bin/env python3
 import requests
 from bs4 import BeautifulSoup
 import json
+from io import StringIO
 import time
 
 query = ''
 currentSong = ''
-TOKEN = ''
+TOKEN = '' 
 # Get oauth token from https://developer.spotify.com/console/get-users-currently-playing-track/?market=
 
-# Credit to richstokes for streamlining song_data() 
+# Credit to richstokes for streamlining song_data() and main()
 
 def song_data():
     global query
@@ -23,7 +25,8 @@ def song_data():
     ARTIST = json_data["item"]["artists"][0]["name"]
     SONG = json_data["item"]["name"]
     query = SONG + " " + ARTIST + " +lyrics"
-    return('Artist: %s, Song: %s' % (ARTIST, SONG))
+    return 'Artist: %s, Song: %s' % (ARTIST, SONG)
+
 
 headers_Get = {
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36',
@@ -62,4 +65,11 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print('Quitting..')
+        try:
+            quit()
+        except SystemExit:
+            quit()

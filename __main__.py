@@ -15,6 +15,11 @@ TOKEN = ''
 dirname, filename = os.path.split(os.path.abspath(__file__))
 os.chdir(dirname)
 
+try:
+    os.system("touch Cached_Data.txt")
+except:
+    pass
+
 cache = open('Cached_Data.txt', 'r+')
 if os.stat("Cached_Data.txt").st_size == 0 and cache.readline() != '\n':
     cache.truncate(0)

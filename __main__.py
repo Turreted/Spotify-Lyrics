@@ -93,11 +93,10 @@ def main():
     currentSong = song_data()
     print(get_Song_Lyrics(query))
     while True:
-        if song_data() != currentSong:
-            if song_data() != 'JSON Response Error':
-                print(song_data())
-                print(get_Song_Lyrics(query))
-                currentSong = song_data()
+        if song_data() != currentSong and song_data() != 'JSON Response Error':
+            print(song_data())
+            print(get_Song_Lyrics(query))
+            currentSong = song_data()
         time.sleep(1)
 
 

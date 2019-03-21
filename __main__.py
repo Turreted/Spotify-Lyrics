@@ -16,7 +16,7 @@ dirname, filename = os.path.split(os.path.abspath(__file__))
 os.chdir(dirname)
 
 cache = open('Cached_Data.txt', 'r+')
-if os.stat("Cached_Data.txt").st_size == 0:
+if os.stat("Cached_Data.txt").st_size == 0 and cache.readline() != '\n':
     USER = input('Spotify Username: ')
     PW = input('Spotify Password: ')
     cache.write("['{}', '{}']".format(USER, PW))

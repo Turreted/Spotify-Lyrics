@@ -1,0 +1,3 @@
+requests>=2.0.0
+spotify-token>=0.1.0
+bs4>=0.0.1

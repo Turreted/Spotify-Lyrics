@@ -2,14 +2,12 @@
 import requests
 from bs4 import BeautifulSoup
 import json
-from io import StringIO
 import time
-import flask
 
 query = ''
 currentSong = ''
 TOKEN = ''
-# Get oauth token from https://developer.spotify.com/console/get-users-currently-playing-track/?market=
+# Get oauth token from https://developer.spotify.com/console/get-users-currently-playing-track
 
 def song_data():
     global query

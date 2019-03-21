@@ -8,6 +8,7 @@ currentSong = ''
 TOKEN = ''
 # Get oauth token from https://developer.spotify.com/console/get-users-currently-playing-track/?market=
 
+# Credit to richstokes for streamlining song_data() 
 
 def song_data():
     global query

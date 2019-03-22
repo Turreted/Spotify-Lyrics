@@ -2,7 +2,7 @@ Basic program that finds the current song playing on your Spotify account and th
 
 Installing requirments
 ```
-pip install -r requirments.txt
+pip install -r requirements.txt
 ```
 
  Aside from that, it can be cloned and run as is. 

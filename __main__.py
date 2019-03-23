@@ -5,8 +5,10 @@ from bs4 import BeautifulSoup
 import json
 import time
 import spotify_token as st
-import ast
 from datetime import datetime
+from collections import namedtuple
+
+Credentials = namedtuple('Credentials', 'username, password')
 
 
 class Spotify:
@@ -65,9 +67,27 @@ class Spotify:
         print(f"{self.lyrics}\n")
 
 
+def get_credentials():
+    """
+    Return namedtuple containing 'username' and 'password' values. Try loading from the environment first, if unable,
+    enter credentials to the input.
+
+    :return: namedtuple(username, password)
+    :rtype: namedtuple
+    """
+    username = os.getenv('SPOTIFY_USERNAME')
+    password = os.getenv('SPOTIFY_PASSWORD')
+    if not (username and password):
+        username = input('Spotify username: ')
+        password = input('Spotify password: ')
+
+    return Credentials(username, password)
+
+
 def main():
-    user = input('Spotify username: ')
-    passw = input('Spotify password: ')
+    credentials = get_credentials()
+    user = credentials.username
+    passw = credentials.password
     spt = Spotify(user, passw)
     while True:
         try:
@@ -79,4 +99,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

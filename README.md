@@ -5,7 +5,15 @@ Installing requirments
 pip install -r requirements.txt
 ```
 
- Aside from that, it can be cloned and run as is. 
+Aside from that, it can be cloned and run as is. 
+ 
+Logging in with environment variables
+-------------------------------------
+
+If you prefer to log in without explicitly passing your credentials, you can set 
+two environment variables, `SPOTIFY_USERNAME` and `SPOTIFY_PASSWORD`. The script
+first check for the existence of those environment variables, only asking for your
+credentials via the console if they are not found. 
  
 Credit to richstokes for streamlining the API interaction and JSON parsing
 

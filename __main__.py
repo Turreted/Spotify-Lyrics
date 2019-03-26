@@ -5,8 +5,29 @@ from bs4 import BeautifulSoup
 import json
 import time
 import spotify_token as st
-import ast
 from datetime import datetime
+from collections import namedtuple
+import logging
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--log', help='set the log level', choices=['INFO', 'DEBUG', 'ERROR'], default='ERROR')
+args = parser.parse_args()
+
+logger = logging.getLogger(__name__)
+
+formatter = logging.Formatter(fmt='{asctime} - {levelname} - {message}', style='{')
+
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
+
+log_level = getattr(logging, args.log)
+logger.setLevel(log_level)
+
+print(f'Starting with log level: {logger.level}')
+
+Credentials = namedtuple('Credentials', 'username, password')
 
 
 class Spotify:
@@ -35,16 +56,28 @@ class Spotify:
         self.lyrics = ''
 
     def gettoken(self):
+        logger.info('getting token')
         if self.token is None or self.token_exp < datetime.now():
+            logger.info('no token found, starting new session')
             data = st.start_session(self.user, self.passw)
             self.token = data[0]
             self.token_exp = data[1]
+            logger.info('token acquired')
+        else:
+            logger.info(f'using cached token')
 
     def getsong(self):
+        logger.debug('calling `getsong`')
         response = requests.get('https://api.spotify.com/v1/me/player/currently-playing', headers=self.spotheaders)
-        if response.status_code != 200:
-            print(response.status_code)
-            print("Bad Response from Spotify API")
+        logger.debug(f'status code: {response.status_code}')
+        try:
+            if response.status_code == 204:
+                logger.info('No song playing')
+            if not response.json():
+                logger.debug('no json payload')
+                return
+        except requests.exceptions.HTTPError as e:
+            raise e
         else:
             json_data = json.loads(response.text)
             self.artist = json_data["item"]["artists"][0]["name"]
@@ -54,10 +87,13 @@ class Spotify:
                 self.getlyrics()
 
     def getlyrics(self):
+        logger.debug('calling `getlyrics`')
         self.lyrics = ''
         s = requests.Session()
         url = 'https://www.google.com/search?q={}&ie=utf-8&oe=utf-8'.format(self.query)
+        logger.debug(f'url -> {url}')
         r = s.get(url, headers=self.lyricheaders)
+        logger.debug('response received... parsing')
         soup = BeautifulSoup(r.text, "html.parser").find_all("span", {"jsname": "YS01Ge"})
         for link in soup:
             self.lyrics += (link.text + '\n')
@@ -65,9 +101,27 @@ class Spotify:
         print(f"{self.lyrics}\n")
 
 
+def get_credentials():
+    """
+    Return namedtuple containing 'username' and 'password' values. Try loading from the environment first, if unable,
+    enter credentials to the input.
+
+    :return: namedtuple(username, password)
+    :rtype: namedtuple
+    """
+    username = os.getenv('SPOTIFY_USERNAME')
+    password = os.getenv('SPOTIFY_PASSWORD')
+    if not (username and password):
+        username = input('Spotify username: ')
+        password = input('Spotify password: ')
+
+    return Credentials(username, password)
+
+
 def main():
-    user = input('Spotify username: ')
-    passw = input('Spotify password: ')
+    credentials = get_credentials()
+    user = credentials.username
+    passw = credentials.password
     spt = Spotify(user, passw)
     while True:
         try:
@@ -75,8 +129,9 @@ def main():
             time.sleep(3)
         except KeyboardInterrupt:
             quit()
+        except Exception:
+            logger.exception('Error occured', exc_info=True)
 
 
 if __name__ == "__main__":
     main()
-

@@ -20,7 +20,11 @@ Command Line Arguments
 
 Run script with `--log DEBUG`, `--log INFO`, `--log ERROR` to set the logging level. 
 Or leave that argument off entirely and only see logs if errors occur. 
- 
+
+Collaborators
+-------------
 Credit to richstokes for streamlining the API interaction and JSON parsing
 
 Credit to TheCannings for properly formatting the code
+
+Credit to AirbusDriver for adding the parser, get_credentials(), and the debugging system

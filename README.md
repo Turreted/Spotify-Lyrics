@@ -16,6 +16,17 @@ two environment variables, `SPOTIFY_USERNAME` and `SPOTIFY_PASSWORD`. The script
 first check for the existence of those environment variables, only asking for your
 credentials via the console if they are not found. 
 
+```
+# ~/.bash_profile
+...
+SPOTIFY_USERNAME=your_username
+SPOTIFY_PASSWORD=your_password
+export SPOTIFY_USERNAME
+export SPOTIFY_PASSWORD
+...
+```
+
+
 Command Line Arguments
 ----------------------
 

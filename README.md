@@ -19,10 +19,8 @@ credentials via the console if they are not found.
 ```
 # ~/.bash_profile
 ...
-SPOTIFY_USERNAME=your_username
-SPOTIFY_PASSWORD=your_password
-export SPOTIFY_USERNAME
-export SPOTIFY_PASSWORD
+export SPOTIFY_USERNAME=your_username
+export SPOTIFY_PASSWORD=your_password
 ...
 ```
 

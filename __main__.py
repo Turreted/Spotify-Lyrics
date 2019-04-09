@@ -88,12 +88,16 @@ class Spotify:
         else:
             json_data = json.loads(response.text)
             # parses the JSON object returned by the Spotify API and uses it to define self.song and self.artist
+            currently_playing = json_data.get('currently_playing_type')
+            if not currently_playing.lower() == 'track':
+                return currently_playing
             self.artist = json_data["item"]["artists"][0]["name"]
             if self.song != json_data["item"]["name"]:
                 self.song = json_data["item"]["name"]
                 # Constructs a google query out of self.song and self.artist
                 self.query = (str(self.song) + '+' + str(self.artist) + '+lyrics').replace(' ', '+')
                 self.getlyrics()
+                return self.song
 
     def getlyrics(self):
         # makes a google search for the song playing on the user's account and extracts the song lyrics contained within the page
@@ -109,8 +113,9 @@ class Spotify:
         soup = BeautifulSoup(r.text, "html.parser").find_all("span", {"jsname": "YS01Ge"})
         for link in soup:
             self.lyrics += (link.text + '\n')
+        print()
         print(f"{self.song} by {self.artist}\n")
-        print(f"{self.lyrics}\n")
+        print(f"{self.lyrics}")
 
 
 def get_credentials():
@@ -135,9 +140,13 @@ def main():
     user = credentials.username
     passw = credentials.password
     spt = Spotify(user, passw)
+    last = None
     while True:
         try:
-            spt.getsong()
+            current = spt.getsong()
+            if current != last and current:
+                print(f'Currently Playing: {current}')
+                last = current
             time.sleep(3)
         except KeyboardInterrupt:
             quit()

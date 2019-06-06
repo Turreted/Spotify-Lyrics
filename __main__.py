@@ -11,7 +11,8 @@ from collections import namedtuple
 import logging
 import argparse
 
-# checks for the existence of two environment variables to get the login credentials.
+# checks for the existence of two environment variables
+# to get the login credentials.
 # If none are found, it prompts the user for a username and password
 parser = argparse.ArgumentParser()
 parser.add_argument('--log', help='set the log level', choices=['INFO', 'DEBUG', 'ERROR'], default='ERROR')
@@ -40,7 +41,8 @@ class Spotify:
         self.user = user
         self.passw = passw
         self.gettoken()
-        # The headers for the GET request sent to the Spotify API in order to retrive the current song
+        # The headers for the GET request sent to the Spotify API in order to
+        # retrieve the current song
         self.spotheaders = {'Accept': 'application/json',
                             'Content-Type': 'application/json',
                             'Authorization': f'Bearer {self.token}',
@@ -73,9 +75,12 @@ class Spotify:
             logger.info(f'using cached token')
 
     def getsong(self):
-        # Submits a GET request to the Spotify API with the valid OAuth token which returns a JSON object containing the song + artist playing on the user's account  
+        # Submits a GET request to the Spotify API with the valid OAuth token
+        # which returns a JSON object containing the song + artist
+        # playing on the user's account
         logger.debug('calling `getsong`')
-        response = requests.get('https://api.spotify.com/v1/me/player/currently-playing', headers=self.spotheaders)
+        response = requests.get('https://api.spotify.com/v1/me/player/currently-playing',
+                                headers=self.spotheaders)
         logger.debug(f'status code: {response.status_code}')
         try:
             if response.status_code == 204:
@@ -100,13 +105,14 @@ class Spotify:
                 return self.song
 
     def getlyrics(self):
-        # makes a google search for the song playing on the user's account and extracts the song lyrics contained within the page
+        # makes a google search for the song playing on the user's account and
+        # extracts the song lyrics contained within the page
         logger.debug('calling `getlyrics`')
         self.lyrics = ''
         s = requests.Session()
         url = 'https://www.google.com/search?q={}&ie=utf-8&oe=utf-8'.format(self.query)
         logger.debug(f'url -> {url}')
-        # makes google search 
+        # makes google search
         r = s.get(url, headers=self.lyricheaders)
         logger.debug('response received... parsing')
         # extracts the song lyrics from the Google page
@@ -118,28 +124,13 @@ class Spotify:
         print(f"{self.lyrics}")
 
 
-def get_credentials():
-    """
-    Return namedtuple containing 'username' and 'password' values. Try loading from the environment first, if unable,
-    enter credentials to the input.
-
-    :return: namedtuple(username, password)
-    :rtype: namedtuple
-    """
-    username = os.getenv('SPOTIFY_USERNAME')
-    password = os.getenv('SPOTIFY_PASSWORD')
-    if not (username and password):
-        username = input('Spotify username: ')
-        password = input('Spotify password: ')
-
-    return Credentials(username, password)
-
-
 def main():
-    credentials = get_credentials()
-    user = credentials.username
-    passw = credentials.password
-    spt = Spotify(user, passw)
+    username, password = os.getenv('SPOTIFY_USERNAME'), \
+                         os.getenv('SPOTIFY_PASSWORD')
+    if not (username and password):
+        username = input('Spotify Username: ')
+        password = input('Spotify password: ')
+    spt = Spotify(username, password)
     last = None
     while True:
         try:

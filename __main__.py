@@ -10,6 +10,7 @@ from datetime import datetime
 from collections import namedtuple
 import logging
 import argparse
+import getpass
 
 # checks for the existence of two environment variables
 # to get the login credentials.
@@ -129,7 +130,7 @@ def main():
                          os.getenv('SPOTIFY_PASSWORD')
     if not (username and password):
         username = input('Spotify Username: ')
-        password = input('Spotify password: ')
+        password = getpass.getpass()
     spt = Spotify(username, password)
     last = None
     while True:

@@ -2,6 +2,11 @@ import logging
 import argparse
 
 
+"""
+Purpose of File is defined here
+"""
+
+
 def init_logger(log_level: str) -> logging.Logger:
     """
     Define the logging.Logger used to debug the application.

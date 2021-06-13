@@ -1,6 +1,6 @@
 # Spotify Lyrics 🎵
 
-### A dead-simple program to find lyrics for your favorite songs - just run ./main.py and have the lyrics for whatever you're playing on Spotify displayed to your terminal
+##### A dead-simple program to find lyrics for your favorite songs - just run ./main.py and have the lyrics for whatever you're playing on Spotify displayed to your terminal
 
 Installing requirements
 ----------------------

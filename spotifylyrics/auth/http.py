@@ -18,20 +18,23 @@ class TCPRequestHandler(socketserver.StreamRequestHandler):
     """
 
     def handle(self):
+        try:
+            # read raw http data
+            msg = self.rfile.readline().strip()
 
-        # read raw http data
-        msg = self.rfile.readline().strip()
+            # write data to parent class
+            self.server.http_data = msg
+            self.return_ok()
 
-        # write data to parent class
-        self.server.http_data = msg
-        self.return_ok()
+        except BaseException as e:
+            self.return_err(err=e)
 
     def server_bind(self):
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind(self.server_address)
 
-    def return_err(self):
-        msg = "HTTP/1.0 500".encode("utf-8")
+    def return_err(self, err: str = ""):
+        msg = f"HTTP/1.0 500: {err}".encode("utf-8")
         self.wfile.write(msg)
 
     def return_ok(self):

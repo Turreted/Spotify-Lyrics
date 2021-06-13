@@ -3,6 +3,11 @@ from hashlib import sha256
 from base64 import urlsafe_b64encode
 from urllib import parse
 
+from spotifylyrics.config import CLIENT_ID
+from spotifylyrics.config import REDIRECT_URI
+
+from .utils import cache_refresh_token
+
 import requests
 
 """
@@ -11,15 +16,13 @@ This file contains all methods used for Spotify's OAuth handshake and token rene
 
 
 def generate_client_PKCE(
-    client_id: str,
-    redirect_uri: str,
-    scopes="user-read-recently-played",
+    scopes="user-read-currently-playing",
     verifier_entropy=64,
     state_entropy=16,
 ):
 
     """
-    Method to generate the URL Spotify's Authorization Code Flow
+    Method to generate the URI Spotify's Authorization Code Flow
     with Proof Key for Code Exchange (PKCE). With the default
     scope, this allows the application to view the songs you
     have most recently listened to.
@@ -33,18 +36,11 @@ def generate_client_PKCE(
     Parameters
     _________
 
-    client_id: str
-        The client id for the spotify application that is
-        being authenticated. 
-
-    redirect_uri: str
-        The URI that the program redirects to after authentication.
-
     scopes: str (List of space-seperated scopes)
         These define the permissions of the Spotify-Lyrics application.
-        The default is "user-read-recently-played." With this scope, the app
-        is only able to read your recently played tracks. More details at:
-        https://developer.spotify.com/documentation/general/guides/scopes/#user-read-recently-played
+        The default is "user-read-currently-playing." With this scope, the app
+        is only able to read the track you are currently playing. More details at:
+        https://developer.spotify.com/documentation/general/guides/scopes/#user-read-currently-playing
 
         Note that if you need to add an additional scope, you may add it as
         part of a space-seperated list.
@@ -88,8 +84,8 @@ def generate_client_PKCE(
     # construct the POST request data with the parameters specified in the Spotify Docs
     api_headers = {
         "response_type": "code",  # the response requested from the Spotify API
-        "client_id": client_id,
-        "redirect_uri": redirect_uri,
+        "client_id": CLIENT_ID,
+        "redirect_uri": REDIRECT_URI,
         "code_challenge": code_challenge,
         "scope": scopes,
         "code_challenge_method": "S256",  # define hashing method as SHA-256
@@ -103,8 +99,8 @@ def generate_client_PKCE(
     return OAuth_url, code_verifier, state_token
 
 
-def exchange_for_access_token(
-    client_id: str, redirect_uri: str, auth_code: str, code_verifier: str
+def exchange_auth_code(
+    auth_code: str, code_verifier: str, cache=True
 ):
     """
     Exchanges the code retrived in the OAuth authentication for a spotify API key and refresh token.
@@ -119,14 +115,11 @@ def exchange_for_access_token(
     auth_code: str
         the code retrived from the Spotify API in the OAuth flow
 
-    client_id: str
-        The client id for the spotify application that is being authenticated.
-
-    redirect_uri: str
-        The URI that the previous step redirected to after authentication.
-
     code_verifier: str
         the secret key generated in the previous step of this program
+
+    cache: bool
+        Determines if the refresh token should be cached
 
     Output
     ______
@@ -136,18 +129,69 @@ def exchange_for_access_token(
 
     refresh_token: str
         A refresh token used to retrive future api keys
+
+    expires_in: int
+        the time (in seconds) until the token expires
     """
 
     # Spotify's token exchange endpoint
     endpoint = "https://accounts.spotify.com/api/token"
 
-    api_headers = {
-        "client_id": client_id,
-        "redirect_uri": redirect_uri,
+    api_data = {
+        "client_id": CLIENT_ID,
+        "redirect_uri": REDIRECT_URI,
         "code": auth_code,
         "code_verifier": code_verifier,
         "grant_type": "authorization_code",
     }
 
-    r = requests.post(endpoint, data=api_headers)
-    print(r.text)
+    r = requests.post(endpoint, data=api_data).json()
+
+    if cache:
+        cache_refresh_token(r["refresh_token"])
+
+    return r["access_token"], r["refresh_token"], r["expires_in"]
+
+
+def exchange_refresh_token(
+   refresh_token: str, cache=True
+):
+    """
+    Exchanges a refresh token for a new auth token and refresh token
+
+
+    Parameters
+    __________
+
+    refresh_token : str
+        a spotify refresh token
+
+    cache: bool
+        Determines if the refresh token should be cached
+    Output
+    ______
+
+    api_key: str
+        a user's api key with prompted permissions
+
+    refresh_token: str
+        A refresh token used to retrive future api keys
+
+    expires_in: int
+        the time (in seconds) until the token expires
+    """
+
+    endpoint = "https://accounts.spotify.com/api/token"
+
+    api_data = {
+        "client_id": CLIENT_ID,
+        "refresh_token": refresh_token,
+        "grant_type": "refresh_token",
+    }
+
+    r = requests.post(endpoint, data=api_data).json()
+
+    if cache:
+        cache_refresh_token(r["refresh_token"])
+
+    return r["access_token"], r["refresh_token"], r["expires_in"]
